@@ -1,6 +1,6 @@
 # Vercel deployment readiness — 28 October 2026
 
-**Primary deployment target:** one personal Vercel Hobby project containing the React CDN assets and one native FastAPI Python function. **Status:** implementation/local verification complete; actual Vercel build, public deployment and anonymous access verification are pending account login and an actual deployment URL. No Vercel project, paid resource, trial or plan purchase has been created by this work.
+**Primary deployment target:** one personal Vercel Hobby project containing the React CDN assets and one native FastAPI Python function. **Status:** implementation/local verification complete; source published at [Ayushl22/oris](https://github.com/Ayushl22/oris); actual Vercel build, public app deployment and anonymous access verification are pending project import and an actual deployment URL. No Vercel project, paid resource, trial or plan purchase has been created by this work.
 
 ## Current official documentation inspected first
 
@@ -111,8 +111,8 @@ npm.cmd test -- --reporter=line --workers=1
 
 ## Account handoff and later public verification
 
-First action only: sign in to **your personal Vercel account**, keeping the **Hobby** plan. No payment card or Pro trial is required. Account authorization stays in your own browser; do not send tokens/passwords here. After confirmation, choose a Git import from a personal repo or CLI upload and confirm Root Directory `.` / Framework FastAPI / no Output Directory override / no API-base URL before deploying.
+The user has signed in and selected [Ayushl22/oris](https://github.com/Ayushl22/oris); source is pushed to `main`. Next, open Vercel's New Project page and import this repository, keeping the personal **Hobby** plan. No payment card or Pro trial is required. Account authorization stays in your own browser; do not send tokens/passwords here. Confirm Root Directory `.` / Framework FastAPI / no Output Directory override / no API-base URL before deploying.
 
 After the free deployment completes, verify its actual public URL using `npm run verify:deployed -- https://...vercel.app` plus the same browser suite with that base URL. Confirm frontend assets, API health/provenance, unchanged checksum/default metrics, 1 February delivery, JSON404 for unknown API paths, hidden dataset path, UI navigation and direct refresh. Inspect Vercel build logs/function size/duration and anonymous/incognito production access. A protected Vercel login page must not be mistaken for the assignment UI.
 
-Remaining assignment actions: live URL, public anonymous-name GitHub repo, unlisted maximum-ten-minute video, incognito URL checks and submission form. No plan purchase, paid resource creation or external publication was performed in this implementation turn.
+Remaining assignment actions: live app URL, unlisted maximum-ten-minute video, incognito URL checks and submission form. GitHub source publication is complete. No plan purchase or paid resource creation was performed.

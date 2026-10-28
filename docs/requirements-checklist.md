@@ -41,7 +41,7 @@ Last reviewed: 28 October 2026. Vercel is the primary deployment target; public 
 | Backend and browser tests actually run | Complete locally | Latest52 backend and10 browser tests; Vercel cloud/public checks still pending |
 | Live app deployment URL | Incomplete | Candidate must deploy and record actual URL |
 | Maximum-ten-minute demo video | Incomplete | Outline in demo.md; candidate must record/upload unlisted |
-| Anonymous-name public GitHub repo | Incomplete | No GitHub account authorization or remote supplied; create and push reviewed source |
+| Anonymous-name public GitHub repo | Complete | User-selected https://github.com/Ayushl22/oris; main pushed and public source/config/snapshot verified without authentication |
 | Incognito access verification of all submission URLs | Incomplete | No live submitted URLs yet |
 | Submission form | Incomplete | Candidate supplies personal details and submits after URL verification |
 | Certify identical forecast/outturn temporal averaging | Not established by published documentation | Provider clarification required before claiming identical hourly-average or instantaneous accuracy; current indicative timestamp method is disclosed |

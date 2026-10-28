@@ -1,5 +1,9 @@
 # Verification results
 
+## GitHub source publication
+
+User-selected public repository: [Ayushl22/oris](https://github.com/Ayushl22/oris), branch `main`. Initial source commit `d333e81d28e44173a17c3aac516d8459b5f3200d` was pushed and its remote SHA matched the local SHA. Unauthenticated public raw-file reads verified the Vercel configuration, ASGI export, AI-use disclosure and 127,972-byte Elexon snapshot with unchanged SHA-256 `1a79b61208823de9de417987d7caf563a1791df9faf23b9176341607b7b8650a`. The staged 80-file source set excluded local dependencies, environments, caches, secrets and generated output; common credential-pattern checks found no matches. Backend tests immediately before publication: **52 passed in 10.31s**, one third-party deprecation warning. No application/data/methodology changes were made for publication. Vercel app deployment remains unperformed.
+
 ## Latest: Vercel adaptation, 28 October 2026
 
 Vercel is now the primary same-project deployment method for both React and FastAPI. **52 backend tests passed** after serverless/cwd/offline/read-only/cache/concurrency and build-copy checks. **10 browser tests passed** against the real ASGI app with a local CDN/compiled-routing harness; TypeScript, frontend production build and formatting passed. Root config validates against the current official schema (with three equivalent draft-dialect bound translations), and Vercel's own route compiler passed 14 path cases. No actual Vercel cloud build/deployment or public URL has yet been verified.
