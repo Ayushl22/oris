@@ -1,0 +1,11 @@
+{
+  "scope": "Installed minimal serverless dependencies for local Python/OS plus source and snapshot; Vercel Linux adapter/build overhead not included. Exact cloud bundle is pending deployment.",
+  "localPython": "3.13.13",
+  "dependencyBytes": 11027060,
+  "applicationSourceBytes": 15540,
+  "snapshotBytes": 127972,
+  "measuredSubtotalBytes": 11170572,
+  "documentedPythonLimitBytes": 524288000,
+  "httpxInstalled": false,
+  "uvicornInstalled": false
+}

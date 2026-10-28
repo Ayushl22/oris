@@ -1,0 +1,15 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": ["frontend/src"],
+  "locale": "en-GB",
+  "canonicalMap": "DESIGN.md",
+  "requiredCapabilities": ["Date", "Form", "Scrollbar", "Select/Listbox"],
+  "ownership": { "Date": "native", "Select/Listbox": "native" },
+  "commands": {
+    "unit": "python -m pytest backend/tests -q",
+    "e2e": "cd frontend && npm test",
+    "accessibility": "cd frontend && npm test -- --grep accessibility",
+    "build": "cd frontend && npm run build"
+  },
+  "evidence": { "failurePaths": "frontend/tests/dashboard.spec.ts" }
+}

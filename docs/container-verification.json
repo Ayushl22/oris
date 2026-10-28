@@ -1,0 +1,141 @@
+{
+  "engine": {
+    "serverVersion": "29.4.2",
+    "operatingSystem": "Docker Desktop",
+    "checkedAt": "2026-10-27T16:11:53.2017738Z",
+    "osType": "linux"
+  },
+  "containers": [
+    {
+      "hostPort": 8001,
+      "lastDecision": "2026-01-31",
+      "lastDelivery": "2026-02-01",
+      "summary": {
+        "expected": 1488,
+        "matched": 744,
+        "unmatched": 744,
+        "coveragePercent": 50.0,
+        "maeMW": 1995.5685483870968,
+        "rmseMW": 2498.8245110107187,
+        "biasMW": 1727.9825268817203,
+        "missingForecast": 744,
+        "forecastInvalid": 0,
+        "forecastConflicts": 0,
+        "forecastAvailable": 744,
+        "missingActual": 0,
+        "actualInvalid": 0,
+        "actualConflicts": 0,
+        "actualAvailable": 1488
+      },
+      "name": "weatherforecast-app-1",
+      "apiHealth": {
+        "status": "ok",
+        "snapshotSha256": "1a79b61208823de9de417987d7caf563a1791df9faf23b9176341607b7b8650a"
+      },
+      "image": "sha256:631ab174d80a8d5045ab59cec8f8ef931d3f24bd983ce3a0f2e26b4f7741786c",
+      "frontendOrDocsHttp": 200,
+      "midnightSummary": {
+        "expected": 1488,
+        "matched": 682,
+        "unmatched": 806,
+        "coveragePercent": 45.833333333333336,
+        "maeMW": 2108.7419354838707,
+        "rmseMW": 2589.306331547578,
+        "biasMW": 1795.4897360703812,
+        "missingForecast": 806,
+        "forecastInvalid": 0,
+        "forecastConflicts": 0,
+        "forecastAvailable": 682,
+        "missingActual": 0,
+        "actualInvalid": 0,
+        "actualConflicts": 0,
+        "actualAvailable": 1488
+      },
+      "lastDaySummary": {
+        "expected": 48,
+        "matched": 24,
+        "unmatched": 24,
+        "coveragePercent": 50.0,
+        "maeMW": 814.0833333333334,
+        "rmseMW": 921.1421804839179,
+        "biasMW": 803.8333333333334,
+        "missingForecast": 24,
+        "forecastInvalid": 0,
+        "forecastConflicts": 0,
+        "forecastAvailable": 24,
+        "missingActual": 0,
+        "actualInvalid": 0,
+        "actualConflicts": 0,
+        "actualAvailable": 48
+      },
+      "health": "healthy",
+      "running": true
+    },
+    {
+      "hostPort": 8002,
+      "lastDecision": "2026-01-31",
+      "lastDelivery": "2026-02-01",
+      "summary": {
+        "expected": 1488,
+        "matched": 744,
+        "unmatched": 744,
+        "coveragePercent": 50.0,
+        "maeMW": 1995.5685483870968,
+        "rmseMW": 2498.8245110107187,
+        "biasMW": 1727.9825268817203,
+        "missingForecast": 744,
+        "forecastInvalid": 0,
+        "forecastConflicts": 0,
+        "forecastAvailable": 744,
+        "missingActual": 0,
+        "actualInvalid": 0,
+        "actualConflicts": 0,
+        "actualAvailable": 1488
+      },
+      "name": "wind-window-api-verify",
+      "apiHealth": {
+        "status": "ok",
+        "snapshotSha256": "1a79b61208823de9de417987d7caf563a1791df9faf23b9176341607b7b8650a"
+      },
+      "image": "sha256:11b13460bdeb0521620cbaf1fca17e719dc7f1bb0db21a7658b75d6cc9c261ec",
+      "frontendOrDocsHttp": 200,
+      "midnightSummary": {
+        "expected": 1488,
+        "matched": 682,
+        "unmatched": 806,
+        "coveragePercent": 45.833333333333336,
+        "maeMW": 2108.7419354838707,
+        "rmseMW": 2589.306331547578,
+        "biasMW": 1795.4897360703812,
+        "missingForecast": 806,
+        "forecastInvalid": 0,
+        "forecastConflicts": 0,
+        "forecastAvailable": 682,
+        "missingActual": 0,
+        "actualInvalid": 0,
+        "actualConflicts": 0,
+        "actualAvailable": 1488
+      },
+      "lastDaySummary": {
+        "expected": 48,
+        "matched": 24,
+        "unmatched": 24,
+        "coveragePercent": 50.0,
+        "maeMW": 814.0833333333334,
+        "rmseMW": 921.1421804839179,
+        "biasMW": 803.8333333333334,
+        "missingForecast": 24,
+        "forecastInvalid": 0,
+        "forecastConflicts": 0,
+        "forecastAvailable": 24,
+        "missingActual": 0,
+        "actualInvalid": 0,
+        "actualConflicts": 0,
+        "actualAvailable": 48
+      },
+      "health": null,
+      "running": true
+    }
+  ],
+  "checkedAt": "2026-10-27T16:13:04.2037083Z"
+}

@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-10-28T16:47:12.487765+00:00",
+  "python": "3.13.13",
+  "scope": "Local ASGI timings and process peak working set; not Vercel latency",
+  "importSeconds": 1.4111910999999964,
+  "firstHealthSeconds": 0.1373492000002443,
+  "warmHealthSeconds": 0.001986100000067381,
+  "monthlyRequestSeconds": 1.4292906000000585,
+  "healthResponseBytes": 99,
+  "monthlyResponseBytes": 20349,
+  "peakWorkingSetMB": 56.1953125,
+  "datasetBytes": 127972,
+  "cache": {
+    "hits": 2,
+    "misses": 1,
+    "maxsize": 1,
+    "currsize": 1
+  },
+  "snapshotSha256": "1a79b61208823de9de417987d7caf563a1791df9faf23b9176341607b7b8650a",
+  "summary": {
+    "expected": 1488,
+    "matched": 744,
+    "unmatched": 744,
+    "coveragePercent": 50.0,
+    "maeMW": 1995.5685483870968,
+    "rmseMW": 2498.8245110107187,
+    "biasMW": 1727.9825268817203,
+    "missingForecast": 744,
+    "forecastInvalid": 0,
+    "forecastConflicts": 0,
+    "forecastAvailable": 744,
+    "missingActual": 0,
+    "actualInvalid": 0,
+    "actualConflicts": 0,
+    "actualAvailable": 1488
+  },
+  "networkClientImported": false,
+  "uvicornImported": false
+}

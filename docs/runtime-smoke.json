@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "expected": 1488,
+    "matched": 744,
+    "unmatched": 744,
+    "coveragePercent": 50.0,
+    "maeMW": 1995.5685483870968,
+    "rmseMW": 2498.8245110107187,
+    "biasMW": 1727.9825268817203,
+    "missingForecast": 744,
+    "forecastInvalid": 0,
+    "forecastConflicts": 0,
+    "forecastAvailable": 744,
+    "missingActual": 0,
+    "actualInvalid": 0,
+    "actualConflicts": 0,
+    "actualAvailable": 1488
+  },
+  "frontendStatus": 200,
+  "lastDelivery": "2026-02-01",
+  "lastDecision": "2026-01-31",
+  "health": {
+    "status": "ok",
+    "snapshotSha256": "1a79b61208823de9de417987d7caf563a1791df9faf23b9176341607b7b8650a"
+  }
+}

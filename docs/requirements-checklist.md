@@ -1,0 +1,49 @@
+# Requirements checklist
+
+Last reviewed: 28 October 2026. Vercel is the primary deployment target; public deployment remains pending the account handoff. Evidence is in `verification.md` and `vercel-deployment.md`; local harness success does not imply a successful Vercel build or public deployment.
+
+| Requirement | Status | Evidence / remaining action |
+|---|---|---|
+| Complete challenge read before implementation | Complete | All DOCX paragraph/table text and deliverables read |
+| Official API definitions, parameters and fields verified | Complete | `elexon-openapi-extract.json`, successful live stream requests |
+| Timestamp semantics, MW units and scope examined | Reviewed with explicit limitation | alignment-review.md, fresh OpenAPI extract and official sources; hourly/time-targeted MW documented, exact temporal averaging kernel not certified |
+| Determine timestamp vs hourly-average comparison | Timestamp-only retained | No official definition justifies a following-hour mean; no actual aggregation, forecast interpolation or forward fill |
+| Explain 744 matches / 1,488 half-hours | Complete | 744 hourly targets represented at 10:00; 744 :30 gaps; separate 100% hourly-target diagnostic |
+| Independent selection audit for every January decision | Complete | Real-snapshot oracle tests all 31 dates at five cutoffs; latest eligible publication per target, zero leakage |
+| Early-cutoff coverage sensitivity | Complete | Midnight: 682 matches, 806 missing forecasts, zero missing actuals; UI note corrected |
+| Only FUELHH WIND + WINDFOR | Complete | Retriever and local WIND filter; persisted Elexon-only snapshot |
+| Real January availability checked | Complete | 19,856 forecast source rows, 1,488 actuals; hourly forecast cadence documented |
+| January decisions; next-day delivery through 1 February | Complete | Domain/API boundary tests and browser check |
+| Configurable decision cutoff; default/timezone disclosed | Complete | UI, DEFAULT_CUTOFF, Europe/London, default 10:00 assumption |
+| Latest forecast per interval, publishTime <= decision | Complete | Domain tests including exact equality and future exclusion |
+| Exact startTime join | Complete | Offset normalization and mismatch tests |
+| Duplicates, nulls, conflicts, missing data handled | Complete | Tests, interval statuses, coverage and diagnostics |
+| Decision view with chart, units, publication info | Complete | Browser workflow and interval table |
+| Accuracy view and actual/forecast comparison | Complete | Selected-day plot, monthly error chart and tables |
+| MAE/RMSE/signed bias, valid pairs only | Complete | Hand-calculated tests; positive means overforecast |
+| Coverage and missing counts | Complete | 50% default coverage visible; invalid/conflict counts separate |
+| Procurement explanation without quantity calculations | Complete | UI and README; no demand or portfolio feed |
+| Reliable persisted cache; no fabricated fallback | Complete | Included real snapshot, atomic refresh/checksum/error tests |
+| Provenance and retrieval information | Complete | In-app manifest links, times, source counts and hashes |
+| React frontend / Python FastAPI backend | Complete | Source and tested local application |
+| Dependency files and .env.example | Complete | requirements files, npm lockfile, environment template |
+| Docker Desktop / engine running | Verified 27 October | Linux engine 29.4.2; 28 October probe returned API500, so current engine health is not asserted |
+| Dockerfiles and Compose | Preserved; built/verified 27 October | Full app on port 8001 and standalone API on 8002 passed UID10001/internal/external checks then; Compose still validates; no fresh image rebuild claimed |
+| App/backend verified from containers | Complete 27 October | 7 browser tests directly against Docker; both APIs matched default/midnight metrics, snapshot checksum and February boundary |
+| Heroku deployment configuration | Retained secondary only | Dockerfile/heroku.yml preserved; no Heroku resource needed or created |
+| Same-project Vercel React + FastAPI | Implemented, locally verified | Root app.py/vercel.json, CDN public output and original /api namespace; no separate host |
+| Native Python serverless entrypoint | Implemented | app.py exports existing ASGI app; no production Uvicorn/background job |
+| Bundled real snapshot / read-only runtime | Verified locally | Relative-to-source path, checksum, arbitrary-cwd/no-network/no-write/concurrent-cache tests |
+| Hobby compatibility and limits | Preflight checked | Personal/non-commercial only; 500MB Python, 2GB memory, 300s Fluid ceiling; configured30s; measured local usage below limits; actual cloud bundle pending |
+| Frontend navigation/direct refresh and API404 | Verified locally | 14 compiler cases, 12 HTTP checks, 10 browser tests; data not exposed via public CDN |
+| README directories, commands, methods, assumptions, tests | Complete | README.md |
+| Explicit Codex/AI disclosure | Complete | README.md |
+| Backend and browser tests actually run | Complete locally | Latest52 backend and10 browser tests; Vercel cloud/public checks still pending |
+| Live app deployment URL | Incomplete | Candidate must deploy and record actual URL |
+| Maximum-ten-minute demo video | Incomplete | Outline in demo.md; candidate must record/upload unlisted |
+| Anonymous-name public GitHub repo | Incomplete | No GitHub account authorization or remote supplied; create and push reviewed source |
+| Incognito access verification of all submission URLs | Incomplete | No live submitted URLs yet |
+| Submission form | Incomplete | Candidate supplies personal details and submits after URL verification |
+| Certify identical forecast/outturn temporal averaging | Not established by published documentation | Provider clarification required before claiming identical hourly-average or instantaneous accuracy; current indicative timestamp method is disclosed |
+
+No authentication, trade execution, consumer-demand data, other energy datasets, synthetic production results, or unrelated product features were added.
