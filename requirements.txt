@@ -1,2 +1,4 @@
 # Minimal serverless runtime. Local/Docker dependencies remain under backend/.
--r backend/requirements-serverless.txt
+fastapi==0.121.0
+python-dotenv==1.2.4
+tzdata==2025.2

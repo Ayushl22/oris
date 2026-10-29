@@ -1,6 +1,8 @@
-# Vercel deployment readiness — 28 October 2026
+# Vercel deployment readiness — updated 29 October 2026
 
 **Primary deployment target:** one personal Vercel Hobby project containing the React CDN assets and one native FastAPI Python function. **Status:** implementation/local verification complete; source published at [Ayushl22/oris](https://github.com/Ayushl22/oris); actual Vercel build, public app deployment and anonymous access verification are pending project import and an actual deployment URL. No Vercel project, paid resource, trial or plan purchase has been created by this work.
+
+**29 October build repair:** the user reported a requirements include parse failure. Root `requirements.txt` is now self-contained, with the same three serverless versions. The backend manifest exists and is not ignored; no packaging exclusions needed changing. Local/Docker manifests remain unchanged. See [the fix verification](verification.md) for the failing/passing regression, 53-test run, pip checks and explicit cloud-verification limits. The repaired Vercel build has not yet been confirmed.
 
 ## Current official documentation inspected first
 
@@ -20,7 +22,7 @@ No technical blocker identified for this fixed-data personal assignment demonstr
 | Root `app.py` | Exports `backend.app.main.app`; no run/start command |
 | Root `vercel.json` | Native FastAPI framework, build command, 30s function cap, snapshot inclusion, development-file exclusions, frontend navigation fallback |
 | `.python-version` | Python 3.12 |
-| Root `requirements.txt` → `backend/requirements-serverless.txt` | FastAPI, dotenv, tzdata only; neither Uvicorn nor httpx installed for this function |
+| Root `requirements.txt` | Self-contained pinned FastAPI, dotenv and tzdata dependencies; no recursive include, Uvicorn or httpx; versions match the backend serverless manifest |
 | `backend/app/snapshot.py` | Standard-library-only file location/hash shared by loader and local maintenance command |
 | `backend/app/main.py` | Bundled file forced on Vercel; local dotenv/static mount omitted there; process cache with cold-initialization lock |
 | `scripts/prepare_vercel.py` | Build-only copy of the unchanged Vite output to root public; no data copy or source symlinks |
@@ -38,7 +40,7 @@ The native runtime handles ASGI invocation. `scripts/local_vercel.py` is a **loc
 
 | Check | Actual result |
 |---|---|
-| Backend suite | **52 passed** in 12.24s after the concurrent-cache regression fix; one third-party Starlette/AnyIO deprecation warning; all existing forecast/alignment/metric tests remain |
+| Backend suite | **53 passed** in 10.78s on 29 October after the standalone-manifest regression fix; one third-party Starlette/AnyIO deprecation warning; all existing forecast/alignment/metric tests remain |
 | Frontend TypeScript and production Vite build | Passed, including the exact root build command and three-file public output; existing 554.17 KB JavaScript chunk warning remains; same UI assets and behavior preserved |
 | Browser suite, including same-origin routing/refresh | **10 passed** in 27.6s with one worker against real ASGI plus the local CDN/rewrite harness |
 | Read-only HTTP verification | 12 routes/assets checked successfully; root and direct accuracy-page refresh return HTML, API returns real JSON, data and missing assets remain 404 |
@@ -50,7 +52,7 @@ The native runtime handles ASGI invocation. `scripts/local_vercel.py` is a **loc
 | Runtime import surface | No httpx or Uvicorn imported by native ASGI path |
 | Local dependency audit | Root verification tooling and frontend report zero known npm vulnerabilities after patching |
 | Docker preservation | Compose config parses; prior container verification retained. Fresh engine probe on 28 October returned Docker API500; current Docker image rebuild not claimed |
-| Actual Vercel build / public URL | **Not yet performed**; needs personal account login/project settings and deployment |
+| Actual Vercel build / public URL | User reported a failed build at requirements parsing; manifest fix verified locally; cloud rebuild and public URL verification pending |
 
 The local harness combines real public files, the actual ASGI app and the regex produced by Vercel's compiler. It does **not** reproduce Vercel's builder, routing infrastructure, generated function bundle, server lifetime or cloud performance. Its passing tests are not a claim of successful Vercel deployment.
 

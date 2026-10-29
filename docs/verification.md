@@ -1,5 +1,21 @@
 # Verification results
 
+## Requirements parser fix, 29 October 2026
+
+The user reported `PYTHON_REQUIREMENTS_PARSE_ERROR` at position 79 of root `requirements.txt`, the start of its `-r backend/requirements-serverless.txt` directive. The included manifest is tracked, exists and is not excluded by `.vercelignore` or the function's `excludeFiles`. Thus a missing/excluded checked-in file does not explain the supplied failure. This is an include-resolution/parser compatibility issue in the reported Vercel build; its internal parser has not been reproduced locally, and this does not establish that every Vercel runtime rejects all includes.
+
+Root `requirements.txt` now directly lists the identical minimal pins: FastAPI 0.121.0, python-dotenv 1.2.4 and tzdata 2025.2. Backend/local/Docker manifests, Dockerfiles, runtime code, Vercel packaging configuration and dataset are unchanged. A regression test first failed on the include, then passed after flattening; it parses the standalone root entries and checks version parity with the backend serverless manifest.
+
+Verified after the fix:
+
+- Complete backend/packaging suite: **53 passed in 10.78s**, one existing Starlette/AnyIO deprecation warning; includes native ASGI, default metrics and 1 February delivery checks.
+- Ruff check and format check passed; 13 backend Python files formatted.
+- Root and backend/local requirements: `pip install --dry-run --no-index -r ...` both passed using the existing environment; no installation or network download was performed. This verifies pip parsing/resolution locally, not Vercel's parser or a clean cloud install.
+- Git-style upload-ignore checks found no exclusions among 12 required deployment paths; glob checks found no function exclusions among 11 required Python/data/manifest paths. `data/snapshot.json.gz` remains explicitly included.
+- Snapshot SHA-256 remains `1a79b61208823de9de417987d7caf563a1791df9faf23b9176341607b7b8650a`.
+
+No frontend source or runtime behavior changed, so frontend/browser/container builds were not repeated for this manifest-only fix. An actual Vercel rebuild and public app checks remain pending; local checks do not certify cloud deployment success.
+
 ## GitHub source publication
 
 User-selected public repository: [Ayushl22/oris](https://github.com/Ayushl22/oris), branch `main`. Initial source commit `d333e81d28e44173a17c3aac516d8459b5f3200d` was pushed and its remote SHA matched the local SHA. Unauthenticated public raw-file reads verified the Vercel configuration, ASGI export, AI-use disclosure and 127,972-byte Elexon snapshot with unchanged SHA-256 `1a79b61208823de9de417987d7caf563a1791df9faf23b9176341607b7b8650a`. The staged 80-file source set excluded local dependencies, environments, caches, secrets and generated output; common credential-pattern checks found no matches. Backend tests immediately before publication: **52 passed in 10.31s**, one third-party deprecation warning. No application/data/methodology changes were made for publication. Vercel app deployment remains unperformed.

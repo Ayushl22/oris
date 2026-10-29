@@ -1,6 +1,6 @@
 # Requirements checklist
 
-Last reviewed: 28 October 2026. Vercel is the primary deployment target; public deployment remains pending the account handoff. Evidence is in `verification.md` and `vercel-deployment.md`; local harness success does not imply a successful Vercel build or public deployment.
+Last reviewed: 29 October 2026. Vercel is the primary deployment target; the reported requirements-include build failure has a locally verified fix, with cloud rebuild/public verification pending. Evidence is in `verification.md` and `vercel-deployment.md`; local harness success does not imply a successful Vercel build or public deployment.
 
 | Requirement | Status | Evidence / remaining action |
 |---|---|---|
@@ -26,7 +26,7 @@ Last reviewed: 28 October 2026. Vercel is the primary deployment target; public 
 | Reliable persisted cache; no fabricated fallback | Complete | Included real snapshot, atomic refresh/checksum/error tests |
 | Provenance and retrieval information | Complete | In-app manifest links, times, source counts and hashes |
 | React frontend / Python FastAPI backend | Complete | Source and tested local application |
-| Dependency files and .env.example | Complete | requirements files, npm lockfile, environment template |
+| Dependency files and .env.example | Complete | Self-contained root serverless pins; unchanged local/Docker manifests; version-parity regression and offline pip dry-runs pass; npm lockfile/environment template retained |
 | Docker Desktop / engine running | Verified 27 October | Linux engine 29.4.2; 28 October probe returned API500, so current engine health is not asserted |
 | Dockerfiles and Compose | Preserved; built/verified 27 October | Full app on port 8001 and standalone API on 8002 passed UID10001/internal/external checks then; Compose still validates; no fresh image rebuild claimed |
 | App/backend verified from containers | Complete 27 October | 7 browser tests directly against Docker; both APIs matched default/midnight metrics, snapshot checksum and February boundary |
@@ -38,7 +38,7 @@ Last reviewed: 28 October 2026. Vercel is the primary deployment target; public 
 | Frontend navigation/direct refresh and API404 | Verified locally | 14 compiler cases, 12 HTTP checks, 10 browser tests; data not exposed via public CDN |
 | README directories, commands, methods, assumptions, tests | Complete | README.md |
 | Explicit Codex/AI disclosure | Complete | README.md |
-| Backend and browser tests actually run | Complete locally | Latest52 backend and10 browser tests; Vercel cloud/public checks still pending |
+| Backend and browser tests actually run | Complete locally | Latest 53 backend tests (29 October); previous 10 browser tests (28 October); browser suite not repeated for manifest-only fix; Vercel cloud/public checks still pending |
 | Live app deployment URL | Incomplete | Candidate must deploy and record actual URL |
 | Maximum-ten-minute demo video | Incomplete | Outline in demo.md; candidate must record/upload unlisted |
 | Anonymous-name public GitHub repo | Complete | User-selected https://github.com/Ayushl22/oris; main pushed and public source/config/snapshot verified without authentication |
