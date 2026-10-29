@@ -18,7 +18,14 @@ Local results before push:
 - Local packaging estimate now includes 568,013 frontend bytes: 11,739,653 bytes total using the prior clean dependency measurement, well below the documented 500MB Python limit. Exact cloud adapter size remains unmeasured.
 - Read-only review found no Important/Critical issues. Docker files/requirements remain unchanged; no fresh container rebuild was performed.
 
-Public fix verification is pending the new build; it must pass both HTTP and browser checks after push. Historical reports below are retained for traceability and do not certify current frontend delivery.
+Public verification after fix commit `fdbdbae4408627507eb72d5fa3809e7f055ec260`:
+
+- GitHub's Vercel status for that commit reported Deployment has completed; this was followed by actual requests to the production domain.
+- **12 public HTTP checks passed** at https://oris-psi-six.vercel.app. `/` and direct-page URLs returned React HTML; real JS/CSS returned HTTP200 with the correct MIME and non-HTML payloads. All four APIs passed, while unknown API, missing asset and private dataset URLs remained 404. Raw evidence: `vercel-public-http.json`.
+- **10 public browser tests passed in 42.9s**, using one Edge worker and fresh contexts without the user's login cookies. Verified forecast/accuracy navigation, real-data display, cutoff changes, February delivery, deep-link refresh, error handling, narrow layout and automated accessibility.
+- Public results remain 744/1488 matches (50%), missing forecast 744, missing actual 0, MAE 1995.57MW, RMSE 2498.82MW, bias +1727.98MW = forecast minus actual; original snapshot SHA-256 confirmed.
+
+The exact Vercel-generated adapter/bundle size and complete cloud build logs were not inspected; actual frontend and API availability was verified directly. Historical reports below are retained for traceability.
 
 ## Requirements parser fix, 29 October 2026
 

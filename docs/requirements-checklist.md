@@ -1,6 +1,6 @@
 # Requirements checklist
 
-Last reviewed: 29 October 2026. Vercel is the primary deployment target. The previous deployment reached Ready with a working API but frontend 404s. Native frontend serving and explicit asset bundling are now locally verified; public rebuild verification is pending. Evidence is in `verification.md` and `vercel-deployment.md`; Ready status alone does not establish a working application.
+Last reviewed: 29 October 2026. Vercel is the primary deployment target. The previous deployment reached Ready with a working API but frontend 404s. Native frontend serving and explicit asset bundling are now verified locally and at https://oris-psi-six.vercel.app. Evidence is in `verification.md` and `vercel-deployment.md`; Ready status alone does not establish a working application.
 
 | Requirement | Status | Evidence / remaining action |
 |---|---|---|
@@ -31,18 +31,18 @@ Last reviewed: 29 October 2026. Vercel is the primary deployment target. The pre
 | Dockerfiles and Compose | Preserved; built/verified 27 October | Full app on port 8001 and standalone API on 8002 passed UID10001/internal/external checks then; Compose still validates; no fresh image rebuild claimed |
 | App/backend verified from containers | Complete 27 October | 7 browser tests directly against Docker; both APIs matched default/midnight metrics, snapshot checksum and February boundary |
 | Heroku deployment configuration | Retained secondary only | Dockerfile/heroku.yml preserved; no Heroku resource needed or created |
-| Same-project Vercel React + FastAPI | Implemented, locally verified | Root app.py/vercel.json, bundled frontend/dist served through ASGI, original /api namespace; no separate host |
+| Same-project Vercel React + FastAPI | Publicly verified | Root app.py/vercel.json, bundled frontend/dist served through ASGI, original /api namespace; no separate host |
 | Native Python serverless entrypoint | Implemented | app.py exports existing ASGI app; no production Uvicorn/background job |
 | Bundled real snapshot / read-only runtime | Verified locally | Relative-to-source path, checksum, arbitrary-cwd/no-network/no-write/concurrent-cache tests |
 | Hobby compatibility and limits | Preflight checked | Personal/non-commercial only; 500MB Python, 2GB memory, 300s Fluid ceiling; configured30s; measured local usage below limits; actual cloud bundle pending |
-| Frontend navigation/direct refresh and API404 | Verified locally | Native isolated-bundle regression, 14 preserved-path config cases, 12 HTTP checks and 10 browser tests without a CDN shim; data not publicly served |
+| Frontend navigation/direct refresh and API404 | Verified locally and publicly | Native isolated-bundle regression, 14 preserved-path config cases; 12 HTTP checks and 10 browser tests on both native local app and public deployment; data not publicly served |
 | README directories, commands, methods, assumptions, tests | Complete | README.md |
 | Explicit Codex/AI disclosure | Complete | README.md |
-| Backend and browser tests actually run | Complete locally | Latest 55 backend tests and 10 browser tests against native production ASGI (29 October); public rerun pending |
-| Live app deployment URL | Incomplete | Candidate must deploy and record actual URL |
+| Backend and browser tests actually run | Complete locally | 55 backend tests; 10 native local browser tests; 12 public HTTP checks and 10 public browser tests passed (29 October) |
+| Live app deployment URL | Complete | https://oris-psi-six.vercel.app; public frontend/assets/API/data/metrics and direct refresh verified after fdbdbae |
 | Maximum-ten-minute demo video | Incomplete | Outline in demo.md; candidate must record/upload unlisted |
 | Anonymous-name public GitHub repo | Complete | User-selected https://github.com/Ayushl22/oris; main pushed and public source/config/snapshot verified without authentication |
-| Incognito access verification of all submission URLs | Incomplete | No live submitted URLs yet |
+| Incognito access verification of all submission URLs | Partially complete | Live app and source anonymously readable; fresh-browser app tests passed; video/final submission URL checks remain |
 | Submission form | Incomplete | Candidate supplies personal details and submits after URL verification |
 | Certify identical forecast/outturn temporal averaging | Not established by published documentation | Provider clarification required before claiming identical hourly-average or instantaneous accuracy; current indicative timestamp method is disclosed |
 

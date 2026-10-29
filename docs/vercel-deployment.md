@@ -1,12 +1,12 @@
 # Vercel deployment readiness — updated 29 October 2026
 
-**Primary deployment target:** one personal Vercel Hobby project with a native FastAPI Python function serving both the bundled React build and the API. **Status:** implementation/local verification complete; source published at [Ayushl22/oris](https://github.com/Ayushl22/oris); the previous build is Ready but public frontend routes return 404; the native frontend-serving fix is locally verified and awaits public rebuild verification at https://oris-psi-six.vercel.app. No Vercel project, paid resource, trial or plan purchase has been created by this work.
+**Primary deployment target:** one personal Vercel Hobby project with a native FastAPI Python function serving the bundled React build and API. **Publicly verified:** [oris-psi-six.vercel.app](https://oris-psi-six.vercel.app), serving fix commit `fdbdbae4408627507eb72d5fa3809e7f055ec260`. All 12 public HTTP checks and all 10 public browser tests passed on 29 October 2026. Source: [Ayushl22/oris](https://github.com/Ayushl22/oris). No paid plan or resource was purchased.
 
 **Earlier 29 October build repair:** the user reported a requirements include parse failure. Root `requirements.txt` is now self-contained, with the same three serverless versions. The backend manifest exists and is not ignored; no packaging exclusions needed changing. Local/Docker manifests remain unchanged. See [the fix verification](verification.md) for the failing/passing regression, 53-test run, pip checks and explicit cloud-verification limits. That build reached Ready and the public API works, but the homepage/assets returned FastAPI 404s. Ready was not evidence of a working frontend.
 
 ## Current official documentation inspected first
 
-- [FastAPI on Vercel](https://vercel.com/docs/frameworks/backend/fastapi): root `app.py` exporting an `app` ASGI object; supported build-command override; generated root `public/` files served by the CDN without mounting public in FastAPI.
+- [FastAPI on Vercel](https://vercel.com/docs/frameworks/backend/fastapi): root ASGI app export, supported build-command override and StaticFiles mounts. Middleware keeps static mounts in the function by default; the documented public/CDN alternative is not used by this app.
 - [Python runtime](https://vercel.com/docs/functions/runtimes/python): native ASGI loading; Python 3.12/3.13/3.14; dependency manifests; package exclusions and relative-file handling.
 - [Function configuration and routing](https://vercel.com/docs/project-configuration/vercel-json): function key `app.py`, include/exclude files, maximum duration and rewrites.
 - [Function limits](https://vercel.com/docs/functions/limitations): 500 MB uncompressed Python bundle; Hobby 2 GB / 1 vCPU; Fluid Compute default/maximum 300 seconds. No Large Functions beta is required.
@@ -37,14 +37,14 @@ The former frontend-only `frontend/vercel.json` was removed. The repository root
 
 The native runtime handles ASGI invocation. `scripts/local_vercel.py` is now only a compatibility alias for the actual native ASGI entry. It contains no CDN simulation or rewrite layer. Local Uvicorn does not deploy to Vercel and is excluded from the Python function. Docker/Uvicorn remain valid local assignment execution paths.
 
-## Verified locally
+## Verified locally and publicly
 
 | Check | Actual result |
 |---|---|
 | Backend suite | **55 passed** in 13.08s on 29 October, including isolated native frontend serving and missing-build-asset regressions; one third-party Starlette/AnyIO deprecation warning; all existing forecast/alignment/metric tests remain |
 | Frontend TypeScript and production Vite build | Passed, including the exact root build command and three-file frontend/dist output; existing 554.17 KB JavaScript chunk warning remains; same UI assets and behavior preserved |
-| Browser suite, including same-origin routing/refresh | **10 passed in 24.5s** with one worker against actual native ASGI and production React files; no CDN shim |
-| Read-only HTTP verification | 12 routes/assets checked successfully; root and direct accuracy-page refresh return HTML, API returns real JSON, data and missing assets remain 404 |
+| Browser suite, including same-origin routing/refresh | **10 local tests passed in 24.5s; 10 public tests passed in 42.9s**, one Edge worker, fresh browser contexts; no CDN shim |
+| Read-only HTTP verification | **12 checks passed both locally and publicly**; root and direct accuracy-page refresh return HTML, API returns real JSON, data and missing assets remain 404 |
 | Official Vercel route compiler | 14 path cases passed with no URL rewrites; original paths reach ASGI, which handles navigation and namespace precedence |
 | Official JSON schema | Root config validates; see schema-dialect note below |
 | Static asset preparation | Real Vite index/JS/CSS validated and explicitly included in the Python function; backend snapshot not publicly served |
@@ -53,7 +53,7 @@ The native runtime handles ASGI invocation. `scripts/local_vercel.py` is now onl
 | Runtime import surface | No httpx or Uvicorn imported by native ASGI path |
 | Local dependency audit | Root verification tooling and frontend report zero known npm vulnerabilities after patching |
 | Docker preservation | Compose config parses; prior container verification retained. Fresh engine probe on 28 October returned Docker API500; current Docker image rebuild not claimed |
-| Actual Vercel build / public URL | 898a596 reached Ready; API works but root/HTML/JS/CSS return JSON404. Native frontend fix awaiting public verification |
+| Actual Vercel build / public URL | **Verified after fdbdbae** at https://oris-psi-six.vercel.app: HTML and JS/CSS 200, real API data, direct refresh and browser workflows pass |
 
 The former local CDN shim returned files that the deployed ASGI app could not serve, creating false confidence. It has been removed. Local checks now target `app.py:app` directly with `VERCEL=1`, and an isolated-package test copies only backend/data/frontend build files into a temporary directory with no public/ directory. It reproduced the old root JSON404 before the fix and now checks HTML, asset MIME types, deep refresh, HEAD, API/docs precedence, private data paths, missing assets and non-GET behavior. Public HTTP and browser checks are still required after every serving-layer change.
 
@@ -119,4 +119,4 @@ The user has signed in and selected [Ayushl22/oris](https://github.com/Ayushl22/
 
 After the free deployment completes, verify its actual public URL using `npm run verify:deployed -- https://...vercel.app` plus the same browser suite with that base URL. Confirm frontend assets, API health/provenance, unchanged checksum/default metrics, 1 February delivery, JSON404 for unknown API paths, hidden dataset path, UI navigation and direct refresh. Inspect Vercel build logs/function size/duration and anonymous/incognito production access. A protected Vercel login page must not be mistaken for the assignment UI.
 
-Remaining assignment actions: live app URL, unlisted maximum-ten-minute video, incognito URL checks and submission form. GitHub source publication is complete. No plan purchase or paid resource creation was performed.
+Remaining assignment actions: unlisted maximum-ten-minute video, anonymous access checks of all final submission URLs, and submission form. The live app URL is verified; public HTTP/fresh browser contexts required no Vercel login. GitHub source publication is complete. No plan purchase or paid resource creation was performed.
