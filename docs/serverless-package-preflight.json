@@ -1,11 +1,12 @@
 {
-  "scope": "Installed minimal serverless dependencies for local Python/OS plus source and snapshot; Vercel Linux adapter/build overhead not included. Exact cloud bundle is pending deployment.",
+  "scope": "Prior clean minimal dependency measurement plus current source, bundled frontend and snapshot on local Windows/Python; Vercel Linux adapter/build overhead not measured.",
   "localPython": "3.13.13",
   "dependencyBytes": 11027060,
-  "applicationSourceBytes": 15540,
+  "applicationSourceBytes": 16608,
   "snapshotBytes": 127972,
-  "measuredSubtotalBytes": 11170572,
+  "measuredSubtotalBytes": 11739653,
   "documentedPythonLimitBytes": 524288000,
   "httpxInstalled": false,
-  "uvicornInstalled": false
+  "uvicornInstalled": false,
+  "frontendBytes": 568013
 }

@@ -4,7 +4,7 @@ A compact day-ahead wind forecast pilot for **purchase decisions made 1–31 Jan
 
 The app reconstructs what was published at a selected decision time, then measures timestamp-aligned forecast error. There is no authentication, demand feed, trading execution or purchase quantity calculation.
 
-**Primary deployment: one Vercel project for both React and FastAPI**, using Vercel's native Python ASGI runtime and CDN assets. The real Elexon snapshot is bundled with the function. No always-running server, Docker service, database, background job or writable persistent storage is needed in Vercel production. **Source is published at [Ayushl22/oris](https://github.com/Ayushl22/oris); Vercel project import and public app verification remain pending.** Dockerfiles and Compose remain for local execution. See [Vercel verification](docs/vercel-deployment.md), [verification history](docs/verification.md) and the [requirements checklist](docs/requirements-checklist.md).
+**Primary deployment: one Vercel project for both React and FastAPI**, using Vercel's native Python ASGI runtime. The built React files and real Elexon snapshot are bundled with the function; FastAPI serves the frontend and API under one origin. No always-running server, Docker service, database, background job or writable persistent storage is needed in Vercel production. **Source is published at [Ayushl22/oris](https://github.com/Ayushl22/oris).** See [Vercel verification](docs/vercel-deployment.md) for actual deployment status, [verification history](docs/verification.md) and the [requirements checklist](docs/requirements-checklist.md). Dockerfiles and Compose remain for local execution.
 
 ## Run locally
 
@@ -191,13 +191,13 @@ Handwritten numbers and intercepted responses appear **only in tests** to exerci
 
 Use the **repository root** as the Vercel Root Directory, not `frontend`. The root `vercel.json` selects the **FastAPI** framework preset. The root `app.py` exports the existing FastAPI ASGI app; Vercel manages function invocation without a Uvicorn start process. This follows the current [FastAPI deployment guide](https://vercel.com/docs/frameworks/backend/fastapi) and [Python runtime documentation](https://vercel.com/docs/functions/runtimes/python).
 
-The configured Build Command installs/builds the existing Vite app and copies only its generated web assets into Vercel's documented root `public/` CDN directory:
+The configured Build Command installs/builds the existing Vite app and validates its generated HTML and referenced JS/CSS files before function packaging:
 
 ```text
 npm ci --prefix frontend && npm run build --prefix frontend && python scripts/prepare_vercel.py
 ```
 
-`public/` is generated, Git-ignored and uploaded as build output, not committed source. Do not mount it in FastAPI: Vercel serves it. `/api/day`, `/api/accuracy`, `/api/provenance`, `/api/health`, `/docs` and `/openapi.json` reach the Python app under the same origin. Root/query URLs and extensionless frontend navigation use `index.html` fallback. Missing assets/data do not return the SPA page; unknown API paths remain JSON 404. No API prefix is stripped or rewritten to another host.
+`frontend/dist/` is generated and Git-ignored. The function explicitly includes `{data/snapshot.json.gz,frontend/dist/**}` and excludes frontend source/tests/node_modules, rather than excluding the entire frontend. `FrontendFiles` mounts the immutable build after the API/docs routes in every environment, including Vercel. `/` and `/index.html` return the React document; extensionless GET/HEAD navigation returns the same document for direct refresh. API/docs namespaces and missing assets stay errors. No root `public/` copy, CDN simulation, rewrite or separate API host is required; Vercel loads `app.py:app` with the original URL path.
 
 **Vercel project settings:**
 
@@ -235,7 +235,7 @@ cd frontend
 npm.cmd test -- --reporter=line --workers=1
 ```
 
-The first command installs local verification tooling, not cloud resources. The HTTP command writes `docs/vercel-public-http.json` only after all checks pass. The browser suite separately verifies JavaScript interaction and refresh behavior. A successful local harness run does not certify Vercel's actual routing/dependency bundle: public checks remain pending until an actual deployment exists.
+The first command installs local verification tooling, not cloud resources. The HTTP command writes `docs/vercel-public-http.json` only after all checks pass, including asset content types and payloads. The browser suite separately verifies JavaScript interaction and refresh behavior. Local checks use the actual native ASGI entry without a CDN shim; the same checks must pass against the real deployment URL. Build Ready status alone does not verify a working application.
 
 ### Heroku — retained secondary configuration only
 
@@ -248,7 +248,8 @@ backend/app/analysis.py       Pure cutoff selection, normalization, join and met
 backend/app/ingest.py         Explicit Elexon retrieval and atomic snapshot writer
 backend/app/store.py          Snapshot validation and checksum checks
 backend/app/snapshot.py       Bundled data path and hashing, without maintenance imports
-backend/app/main.py           FastAPI routes, settings, CORS and static frontend serving
+backend/app/main.py           FastAPI routes, settings, CORS and frontend mount
+backend/app/frontend.py       Static build serving and safe navigation fallback
 backend/tests/               Domain, cache/retrieval and API tests
 backend/requirements*.txt    Pinned direct Python dependencies and development tools
 backend/Dockerfile           Optional standalone API image (root build context)
@@ -256,15 +257,15 @@ frontend/src/                React views, shared controls/chart/table and styles
 frontend/tests/              Playwright browser/error/accessibility checks
 frontend/package-lock.json   Reproducible frontend dependency resolution
 app.py                       Native Vercel ASGI export for the existing Python app
-vercel.json                  Same-project FastAPI/CDN routing and function packaging
+vercel.json                  Native FastAPI function and explicit React/data packaging
 .vercelignore                Source-upload exclusions (keeps real dataset)
 requirements.txt            Minimal root Vercel dependency entry
 .python-version              Vercel Python 3.12 selection
-scripts/prepare_vercel.py     Build-only React assets → public/ CDN output
+scripts/prepare_vercel.py     Build-only validation of bundled React HTML/JS/CSS
 scripts/verify_vercel.mjs     Official-schema and Vercel-compiler routing checks
 scripts/verify_deployment.mjs Read-only public/local HTTP checks
-scripts/local_vercel.py       Local test harness only; not a production entrypoint
-public/                      Generated CDN assets; not committed or a data store
+scripts/local_vercel.py       Local alias for native ASGI; no CDN simulation
+frontend/dist/               Built React files; bundled at build time, not committed
 data/snapshot.json.gz        Persisted real Elexon data plus retrieval manifest
 docs/                       Methodology, verification, checklist and demo outline
 DESIGN.md                    Shared visual, interaction and UI ownership decisions

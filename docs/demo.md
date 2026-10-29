@@ -12,7 +12,7 @@ Status: outline prepared; recording and unlisted YouTube upload remain for the c
 
 ## Part 2: technical review (5:00–10:00 maximum)
 
-- 5:00–6:00: Architecture: React CDN assets and native Python FastAPI function share one Vercel project, using the immutable bundled snapshot. Show root app.py/vercel.json, build-only public assets and dependency split. Docker/Compose remain for local execution. No runtime Elexon download or persistent storage dependency.
+- 5:00–6:00: Architecture: native Python FastAPI serves the bundled React build and API in one Vercel project, using the immutable bundled snapshot. Show root app.py/vercel.json, explicit frontend/dist and snapshot inclusion, and dependency split. Docker/Compose remain for local execution. No runtime Elexon download or persistent storage dependency.
 - 6:00–7:15: Explain documented query parameters and the saved OpenAPI extract. Show `analysis.py`: timezone normalization, inclusive cutoff, latest publication separately per exact startTime, null/conflict policy, exact join.
 - 7:15–8:15: Explain missing counts, valid-only pooled metrics and bias formula. Mention same operational MW scope and the forecast averaging-method limitation. Show tests for cutoff equality, future exclusion, duplicates, actual revisions and February boundary.
 - 8:15–9:15: Run test and build commands. Show the real status in verification.md. Explain atomic refresh and checksums, explicit 503 on a bad snapshot, frontend loading/error/retry and cancellation. Never describe unexecuted container/deployment checks as passing.

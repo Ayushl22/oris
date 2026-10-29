@@ -45,11 +45,15 @@ const validate = ajv.compile(schema);
 assert(validate(config), JSON.stringify(validate.errors, null, 2));
 const compiled = getTransformedRoutes(config);
 assert.equal(compiled.error, null, JSON.stringify(compiled.error));
-const rewrites = compiled.routes.filter((route) => route.src && route.dest);
+const rewrites = (compiled.routes || []).filter(
+  (route) => route.src && route.dest,
+);
+// Preserve request paths for the native ASGI app, including SPA navigation.
+assert.equal(config.rewrites, undefined);
 const cases = [
-  ["/", "/index.html"],
-  ["/?view=accuracy", "/index.html"],
-  ["/review?view=accuracy&date=2026-01-31", "/index.html"],
+  ["/", null],
+  ["/?view=accuracy", null],
+  ["/review?view=accuracy&date=2026-01-31", null],
   ["/api/day?decision_date=2026-01-31&cutoff=10:00", null],
   ["/api/accuracy?cutoff=10:00", null],
   ["/api/provenance", null],
@@ -69,10 +73,10 @@ for (const [url, expected] of cases) {
     null;
   assert.equal(actual, expected, `Wrong rewrite for ${url}`);
 }
-const publicDir = path.join(root, "public");
+const publicDir = path.join(root, "frontend", "dist");
 assert(
   fs.existsSync(path.join(publicDir, "index.html")),
-  "Build and prepare public/ first",
+  "Build the bundled frontend first",
 );
 const html = fs.readFileSync(path.join(publicDir, "index.html"), "utf8");
 const assets = [...html.matchAll(/(?:src|href)="(\/assets\/[^\"]+)"/g)].map(
@@ -83,17 +87,22 @@ for (const asset of assets)
   assert(fs.existsSync(path.join(publicDir, asset)), `Missing ${asset}`);
 assert(
   !fs.existsSync(path.join(publicDir, "data")),
-  "Backend data must not be in CDN output",
+  "Backend data must not be in frontend output",
 );
-assert.equal(config.functions["app.py"].includeFiles, "data/snapshot.json.gz");
-assert(fs.existsSync(path.join(root, config.functions["app.py"].includeFiles)));
+assert.equal(
+  config.functions["app.py"].includeFiles,
+  "{data/snapshot.json.gz,frontend/dist/**}",
+);
+assert(!config.functions["app.py"].excludeFiles.includes("frontend/**"));
+assert(fs.existsSync(path.join(root, "data/snapshot.json.gz")));
 assert(config.functions["app.py"].maxDuration <= 300);
 const output = {
   checkedAt: new Date().toISOString(),
   schemaSource: "https://openapi.vercel.sh/vercel.json",
   schemaDialectBoundsTranslated: normalizedBounds,
   framework: config.framework,
-  routes: compiled.routes,
+  routes: compiled.routes || [],
+  frontendServing: "native ASGI with bundled frontend/dist; no CDN shim",
   routeCases: cases.length,
   assetFiles: assets,
   bundledDatasetBytes: fs.statSync(path.join(root, "data/snapshot.json.gz"))

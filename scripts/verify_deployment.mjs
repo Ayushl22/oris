@@ -39,7 +39,21 @@ const assets = [...html.matchAll(/(?:src|href)="(\/assets\/[^\"]+)"/g)].map(
   (m) => m[1],
 );
 assert(assets.length >= 2);
-for (const asset of assets) await request(asset);
+for (const asset of assets) {
+  const response = await request(asset);
+  const type = response.headers.get("content-type") || "";
+  assert(
+    asset.endsWith(".css")
+      ? type.includes("text/css")
+      : type.includes("javascript"),
+    `${asset}: wrong asset content type ${type}`,
+  );
+  const body = await response.text();
+  assert(
+    body.length > 0 && !body.includes('<div id="root">'),
+    `${asset}: expected asset bytes, not HTML`,
+  );
+}
 for (const route of [
   "/?view=accuracy&period=month&cutoff=10:00",
   "/review?view=accuracy&date=2026-01-31&cutoff=10:00",

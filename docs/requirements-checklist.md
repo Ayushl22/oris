@@ -1,6 +1,6 @@
 # Requirements checklist
 
-Last reviewed: 29 October 2026. Vercel is the primary deployment target; the reported requirements-include build failure has a locally verified fix, with cloud rebuild/public verification pending. Evidence is in `verification.md` and `vercel-deployment.md`; local harness success does not imply a successful Vercel build or public deployment.
+Last reviewed: 29 October 2026. Vercel is the primary deployment target. The previous deployment reached Ready with a working API but frontend 404s. Native frontend serving and explicit asset bundling are now locally verified; public rebuild verification is pending. Evidence is in `verification.md` and `vercel-deployment.md`; Ready status alone does not establish a working application.
 
 | Requirement | Status | Evidence / remaining action |
 |---|---|---|
@@ -31,14 +31,14 @@ Last reviewed: 29 October 2026. Vercel is the primary deployment target; the rep
 | Dockerfiles and Compose | Preserved; built/verified 27 October | Full app on port 8001 and standalone API on 8002 passed UID10001/internal/external checks then; Compose still validates; no fresh image rebuild claimed |
 | App/backend verified from containers | Complete 27 October | 7 browser tests directly against Docker; both APIs matched default/midnight metrics, snapshot checksum and February boundary |
 | Heroku deployment configuration | Retained secondary only | Dockerfile/heroku.yml preserved; no Heroku resource needed or created |
-| Same-project Vercel React + FastAPI | Implemented, locally verified | Root app.py/vercel.json, CDN public output and original /api namespace; no separate host |
+| Same-project Vercel React + FastAPI | Implemented, locally verified | Root app.py/vercel.json, bundled frontend/dist served through ASGI, original /api namespace; no separate host |
 | Native Python serverless entrypoint | Implemented | app.py exports existing ASGI app; no production Uvicorn/background job |
 | Bundled real snapshot / read-only runtime | Verified locally | Relative-to-source path, checksum, arbitrary-cwd/no-network/no-write/concurrent-cache tests |
 | Hobby compatibility and limits | Preflight checked | Personal/non-commercial only; 500MB Python, 2GB memory, 300s Fluid ceiling; configured30s; measured local usage below limits; actual cloud bundle pending |
-| Frontend navigation/direct refresh and API404 | Verified locally | 14 compiler cases, 12 HTTP checks, 10 browser tests; data not exposed via public CDN |
+| Frontend navigation/direct refresh and API404 | Verified locally | Native isolated-bundle regression, 14 preserved-path config cases, 12 HTTP checks and 10 browser tests without a CDN shim; data not publicly served |
 | README directories, commands, methods, assumptions, tests | Complete | README.md |
 | Explicit Codex/AI disclosure | Complete | README.md |
-| Backend and browser tests actually run | Complete locally | Latest 53 backend tests (29 October); previous 10 browser tests (28 October); browser suite not repeated for manifest-only fix; Vercel cloud/public checks still pending |
+| Backend and browser tests actually run | Complete locally | Latest 55 backend tests and 10 browser tests against native production ASGI (29 October); public rerun pending |
 | Live app deployment URL | Incomplete | Candidate must deploy and record actual URL |
 | Maximum-ten-minute demo video | Incomplete | Outline in demo.md; candidate must record/upload unlisted |
 | Anonymous-name public GitHub repo | Complete | User-selected https://github.com/Ayushl22/oris; main pushed and public source/config/snapshot verified without authentication |

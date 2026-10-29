@@ -1,8 +1,8 @@
 # Vercel deployment readiness — updated 29 October 2026
 
-**Primary deployment target:** one personal Vercel Hobby project containing the React CDN assets and one native FastAPI Python function. **Status:** implementation/local verification complete; source published at [Ayushl22/oris](https://github.com/Ayushl22/oris); actual Vercel build, public app deployment and anonymous access verification are pending project import and an actual deployment URL. No Vercel project, paid resource, trial or plan purchase has been created by this work.
+**Primary deployment target:** one personal Vercel Hobby project with a native FastAPI Python function serving both the bundled React build and the API. **Status:** implementation/local verification complete; source published at [Ayushl22/oris](https://github.com/Ayushl22/oris); the previous build is Ready but public frontend routes return 404; the native frontend-serving fix is locally verified and awaits public rebuild verification at https://oris-psi-six.vercel.app. No Vercel project, paid resource, trial or plan purchase has been created by this work.
 
-**29 October build repair:** the user reported a requirements include parse failure. Root `requirements.txt` is now self-contained, with the same three serverless versions. The backend manifest exists and is not ignored; no packaging exclusions needed changing. Local/Docker manifests remain unchanged. See [the fix verification](verification.md) for the failing/passing regression, 53-test run, pip checks and explicit cloud-verification limits. The repaired Vercel build has not yet been confirmed.
+**Earlier 29 October build repair:** the user reported a requirements include parse failure. Root `requirements.txt` is now self-contained, with the same three serverless versions. The backend manifest exists and is not ignored; no packaging exclusions needed changing. Local/Docker manifests remain unchanged. See [the fix verification](verification.md) for the failing/passing regression, 53-test run, pip checks and explicit cloud-verification limits. That build reached Ready and the public API works, but the homepage/assets returned FastAPI 404s. Ready was not evidence of a working frontend.
 
 ## Current official documentation inspected first
 
@@ -20,53 +20,54 @@ No technical blocker identified for this fixed-data personal assignment demonstr
 | File | Role |
 |---|---|
 | Root `app.py` | Exports `backend.app.main.app`; no run/start command |
-| Root `vercel.json` | Native FastAPI framework, build command, 30s function cap, snapshot inclusion, development-file exclusions, frontend navigation fallback |
+| Root `vercel.json` | Native FastAPI framework, build command, 30s cap, explicit snapshot + frontend/dist inclusion, development-file exclusions; no URL rewrites |
 | `.python-version` | Python 3.12 |
 | Root `requirements.txt` | Self-contained pinned FastAPI, dotenv and tzdata dependencies; no recursive include, Uvicorn or httpx; versions match the backend serverless manifest |
 | `backend/app/snapshot.py` | Standard-library-only file location/hash shared by loader and local maintenance command |
-| `backend/app/main.py` | Bundled file forced on Vercel; local dotenv/static mount omitted there; process cache with cold-initialization lock |
-| `scripts/prepare_vercel.py` | Build-only copy of the unchanged Vite output to root public; no data copy or source symlinks |
+| `backend/app/main.py` | Bundled snapshot forced on Vercel; cold-cache lock; built frontend mounted after API/docs in every environment |
+| `backend/app/frontend.py` | Read-only static serving and GET/HEAD extensionless navigation fallback; reserved API/docs/asset misses remain errors |
+| `scripts/prepare_vercel.py` | Validates built frontend HTML and referenced JS/CSS before packaging; no public copy, data copy or source symlinks |
 | `.vercelignore` | Excludes local environments/build outputs/docs/secrets from upload; retains source, build scripts and real snapshot |
-| `functions.app.py.excludeFiles` | Excludes frontend/public/development files from Python function, independently of CDN build output |
+| `functions.app.py.excludeFiles` | Excludes frontend source/tests, node_modules, local environments, public, docs and scripts; retains the explicitly included frontend/dist build |
 | Dockerfiles / Compose | Preserved local execution; requirement-file copy updated for the shared serverless requirements include |
 
 The former frontend-only `frontend/vercel.json` was removed. The repository root is the required project root. No separate backend host, cross-origin API URL, reverse proxy container or Vercel Services beta is needed.
 
 `data/snapshot.json.gz` remains the identical 127,972-byte Elexon artifact. It resolves from the bundled Python source location rather than cwd or a workstation absolute path. It is never copied to public/. Cold functions verify/read/decompress it once, including when two requests arrive together; warm requests reuse it. There is no HTTP fetch, write, background job, startup server or refresh endpoint in the serverless request path. Refresh locally with the existing maintenance command and redeploy the artifact.
 
-The native runtime handles ASGI invocation. `scripts/local_vercel.py` is a **local test harness**, not a production start command. Its Uvicorn use does not deploy to Vercel and is excluded from the Python function. Docker/Uvicorn remain valid local assignment execution paths.
+The native runtime handles ASGI invocation. `scripts/local_vercel.py` is now only a compatibility alias for the actual native ASGI entry. It contains no CDN simulation or rewrite layer. Local Uvicorn does not deploy to Vercel and is excluded from the Python function. Docker/Uvicorn remain valid local assignment execution paths.
 
 ## Verified locally
 
 | Check | Actual result |
 |---|---|
-| Backend suite | **53 passed** in 10.78s on 29 October after the standalone-manifest regression fix; one third-party Starlette/AnyIO deprecation warning; all existing forecast/alignment/metric tests remain |
-| Frontend TypeScript and production Vite build | Passed, including the exact root build command and three-file public output; existing 554.17 KB JavaScript chunk warning remains; same UI assets and behavior preserved |
-| Browser suite, including same-origin routing/refresh | **10 passed** in 27.6s with one worker against real ASGI plus the local CDN/rewrite harness |
+| Backend suite | **55 passed** in 13.08s on 29 October, including isolated native frontend serving and missing-build-asset regressions; one third-party Starlette/AnyIO deprecation warning; all existing forecast/alignment/metric tests remain |
+| Frontend TypeScript and production Vite build | Passed, including the exact root build command and three-file frontend/dist output; existing 554.17 KB JavaScript chunk warning remains; same UI assets and behavior preserved |
+| Browser suite, including same-origin routing/refresh | **10 passed in 24.5s** with one worker against actual native ASGI and production React files; no CDN shim |
 | Read-only HTTP verification | 12 routes/assets checked successfully; root and direct accuracy-page refresh return HTML, API returns real JSON, data and missing assets remain 404 |
-| Official Vercel route compiler | 14 path cases passed; preserves `/api`, `/docs`, `/redoc`, `/openapi.json` and assets; generates frontend fallback |
+| Official Vercel route compiler | 14 path cases passed with no URL rewrites; original paths reach ASGI, which handles navigation and namespace precedence |
 | Official JSON schema | Root config validates; see schema-dialect note below |
-| Static asset preparation | Real Vite index/JS/CSS copied; backend snapshot not publicly served |
+| Static asset preparation | Real Vite index/JS/CSS validated and explicitly included in the Python function; backend snapshot not publicly served |
 | Arbitrary cwd, no network/no writes | Native entry tests passed; checksum/provenance work with local DATA_PATH pointing to a nonexistent file |
 | Cache and concurrency | One load across repeated requests and two simultaneous cold requests; warm cache reused |
 | Runtime import surface | No httpx or Uvicorn imported by native ASGI path |
 | Local dependency audit | Root verification tooling and frontend report zero known npm vulnerabilities after patching |
 | Docker preservation | Compose config parses; prior container verification retained. Fresh engine probe on 28 October returned Docker API500; current Docker image rebuild not claimed |
-| Actual Vercel build / public URL | User reported a failed build at requirements parsing; manifest fix verified locally; cloud rebuild and public URL verification pending |
+| Actual Vercel build / public URL | 898a596 reached Ready; API works but root/HTML/JS/CSS return JSON404. Native frontend fix awaiting public verification |
 
-The local harness combines real public files, the actual ASGI app and the regex produced by Vercel's compiler. It does **not** reproduce Vercel's builder, routing infrastructure, generated function bundle, server lifetime or cloud performance. Its passing tests are not a claim of successful Vercel deployment.
+The former local CDN shim returned files that the deployed ASGI app could not serve, creating false confidence. It has been removed. Local checks now target `app.py:app` directly with `VERCEL=1`, and an isolated-package test copies only backend/data/frontend build files into a temporary directory with no public/ directory. It reproduced the old root JSON404 before the fix and now checks HTML, asset MIME types, deep refresh, HEAD, API/docs precedence, private data paths, missing assets and non-GET behavior. Public HTTP and browser checks are still required after every serving-layer change.
 
-A final simultaneous backend/browser run encountered local Windows memory-commit exhaustion: gzip allocation failed in Python, while an Edge context timed out and a Node worker could not commit heap memory. The unchanged snapshot independently decompressed and retained its checksum. The full backend suite then passed alone, followed by the complete browser suite with one worker. No analysis code, data or test assertions were changed to obtain those passes.
+A historical 28 October simultaneous backend/browser run encountered local Windows memory-commit exhaustion: gzip allocation failed in Python, while an Edge context timed out and a Node worker could not commit heap memory. The unchanged snapshot independently decompressed and retained its checksum. The full backend suite then passed alone, followed by the complete browser suite with one worker. No analysis code, data or test assertions were changed to obtain those passes.
 
 ### Timing and size preflight
 
 `scripts/benchmark_serverless.py` invokes native ASGI directly in a fresh local Python 3.13 process, with no HTTP server or HTTP client imports. Final local measurement: import **1.41s**, first health/data load **0.14s**, full monthly request **1.43s**, warm health **0.002s**, peak process working set **56.2 MiB**. The monthly response is **20,349 bytes**. These support the 30s/2GB preflight but are not Vercel latency guarantees. `serverless-benchmark.json` records raw values.
 
-The snapshot is 127,972 bytes, and production assets are about 568 KB uncompressed. Python excludes the entire frontend, local virtualenv, node_modules, public assets, tests, docs and scripts from its function. `serverless-package-preflight.json` measures **11,170,572 bytes (10.65 MiB)** for a clean minimal dependency install plus source/data on the local OS; the exact Vercel Linux adapter/package size remains a deployment-build check. The function's 500 MB limit is a hard requirement, not an entitlement to bundle development environments.
+The snapshot is 127,972 bytes, and production assets are about 568 KB uncompressed. Python includes the 568,013-byte React build while excluding frontend source/tests, local virtualenv, node_modules, public, docs and scripts from its function. `serverless-package-preflight.json` measures **11,739,653 bytes (11.20 MiB)** for a clean minimal dependency install plus source/data on the local OS; the exact Vercel Linux adapter/package size remains a deployment-build check. The function's 500 MB limit is a hard requirement, not an entitlement to bundle development environments.
 
 ### Schema/tooling note
 
-The current official `openapi.vercel.sh/vercel.json` schema declares draft-04 but contains three numeric exclusive minimum bounds using a later dialect in experimental trigger definitions. The verifier translates those exact bounds to their equivalent draft-04 form, then validates the full config; it does not disable config validation. The source schema is retained in `vercel-schema.json`. Vercel's `@vercel/routing-utils` 6.6.0 compiles the actual rewrites; its older path-to-regexp dependency is overridden with API-compatible 6.3.0 to remove a reported development-tool vulnerability. Neither tool ships in the Python runtime.
+The current official `openapi.vercel.sh/vercel.json` schema declares draft-04 but contains three numeric exclusive minimum bounds using a later dialect in experimental trigger definitions. The verifier translates those exact bounds to their equivalent draft-04 form, then validates the full config; it does not disable config validation. The source schema is retained in `vercel-schema.json`. Vercel's `@vercel/routing-utils` 6.6.0 checks that no URL rewrites obscure native ASGI routes; its older path-to-regexp dependency is overridden with API-compatible 6.3.0 to remove a reported development-tool vulnerability. Neither tool ships in the Python runtime.
 
 ## Preserved default results
 
@@ -95,15 +96,16 @@ npm.cmd run build
 npm.cmd run verify:routing
 .\.venv\Scripts\python.exe -m pytest backend/tests -q
 .\.venv\Scripts\python.exe scripts/benchmark_serverless.py
-.\.venv\Scripts\python.exe -m uvicorn scripts.local_vercel:app --host 127.0.0.1 --port 8003
+$env:VERCEL='1'
+.\.venv\Scripts\python.exe -m uvicorn app:app --host 127.0.0.1 --port 8013
 ```
 
-The Uvicorn line starts the test harness only. In another terminal:
+The Uvicorn line starts the actual native ASGI app locally only. In another terminal:
 
 ```powershell
-npm.cmd run verify:deployed -- http://127.0.0.1:8003
+npm.cmd run verify:deployed -- http://127.0.0.1:8013
 $env:PLAYWRIGHT_CHANNEL='msedge'
-$env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:8003'
+$env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:8013'
 $env:VERCEL_ROUTING_CHECK='1'
 cd frontend
 npm.cmd run typecheck
@@ -113,7 +115,7 @@ npm.cmd test -- --reporter=line --workers=1
 
 ## Account handoff and later public verification
 
-The user has signed in and selected [Ayushl22/oris](https://github.com/Ayushl22/oris); source is pushed to `main`. Next, open Vercel's New Project page and import this repository, keeping the personal **Hobby** plan. No payment card or Pro trial is required. Account authorization stays in your own browser; do not send tokens/passwords here. Confirm Root Directory `.` / Framework FastAPI / no Output Directory override / no API-base URL before deploying.
+The user has signed in and selected [Ayushl22/oris](https://github.com/Ayushl22/oris); source is pushed to `main`. The existing Vercel project at https://oris-psi-six.vercel.app automatically rebuilds pushes to main; keep the personal **Hobby** plan. No payment card or Pro trial is required. Account authorization stays in your own browser; do not send tokens/passwords here. Confirm Root Directory `.` / Framework FastAPI / no Output Directory override / no API-base URL before deploying.
 
 After the free deployment completes, verify its actual public URL using `npm run verify:deployed -- https://...vercel.app` plus the same browser suite with that base URL. Confirm frontend assets, API health/provenance, unchanged checksum/default metrics, 1 February delivery, JSON404 for unknown API paths, hidden dataset path, UI navigation and direct refresh. Inspect Vercel build logs/function size/duration and anonymous/incognito production access. A protected Vercel login page must not be mistaken for the assignment UI.
 

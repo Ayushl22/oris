@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
 
 from .analysis import analyse, decision_time, summarise
+from .frontend import FrontendFiles
 from .snapshot import DEFAULT_PATH
 from .store import SnapshotError, load_snapshot
 
@@ -122,5 +122,7 @@ def unknown_api(path: str):
 
 
 dist = ROOT / "frontend" / "dist"
-if not os.getenv("VERCEL") and dist.exists():
-    app.mount("/", StaticFiles(directory=dist, html=True), name="frontend")
+if dist.exists():
+    # The build is explicitly bundled on Vercel as well as copied into Docker.
+    # Register last so API and documentation routes keep their precedence.
+    app.mount("/", FrontendFiles(directory=dist, html=True), name="frontend")

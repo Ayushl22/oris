@@ -1,18 +1,10 @@
 {
-  "checkedAt": "2026-10-28T16:59:43.012Z",
+  "checkedAt": "2026-10-29T15:30:48.469Z",
   "schemaSource": "https://openapi.vercel.sh/vercel.json",
   "schemaDialectBoundsTranslated": 3,
   "framework": "fastapi",
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "^(?:/((?!api(?:/|$)|assets(?:/|$)|docs(?:/|$)|redoc(?:/|$)|openapi\\.json$)[^.]*))$",
-      "dest": "/index.html",
-      "check": true
-    }
-  ],
+  "routes": [],
+  "frontendServing": "native ASGI with bundled frontend/dist; no CDN shim",
   "routeCases": 14,
   "assetFiles": [
     "/assets/index-BsxE_2Bj.js",

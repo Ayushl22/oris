@@ -1,5 +1,25 @@
 # Verification results
 
+## Native frontend routing fix, 29 October 2026
+
+Verified the reported failure on `https://oris-psi-six.vercel.app`: `/`, `/index.html`, `/review?view=accuracy` and the real JS/CSS asset URLs returned JSON404, while `/api/health`, `/openapi.json` and monthly accuracy returned HTTP200 with the original checksum and metrics. Deployment 898a596 being Ready confirmed the Python build, not a working frontend.
+
+The app explicitly disabled its frontend mount under VERCEL, while packaging excluded the entire frontend and public directories. It relied on public/CDN collection and SPA rewrites; that delivery path was absent in this deployment. The old local CDN shim served files outside the native app and hid the failure. The exact Vercel control-plane/CDN collection cause was not inspected through authenticated build logs; the observable native serving/bundling gap is fixed directly.
+
+The function now explicitly includes `{data/snapshot.json.gz,frontend/dist/**}`; frontend source/tests and node_modules remain excluded. Native FastAPI mounts the immutable build after API/docs routes in every environment. Missing files produce errors; only extensionless GET/HEAD navigation outside reserved API/docs/assets namespaces gets index.html fallback. URL rewrites and the local CDN shim were removed. The build validates HTML and referenced assets before deployment. No UI, dependencies, data, forecast selection, timestamp matching, metric calculation, timezone or January scope changed.
+
+Local results before push:
+
+- Isolated-package native-entry regression first reproduced the root JSON404, then passed without public/, frontend source or repository-cwd access. It checks HTML, JS/CSS MIME, deep links, HEAD, namespace precedence, private files, asset misses and non-GET requests.
+- **55 backend tests passed in 13.08s**, one existing Starlette/AnyIO deprecation warning; Ruff check/format passed (18 Python files).
+- Exact root production build passed and validated three React files. Existing 554.17KB JS chunk warning remains; npm audit during install reported zero vulnerabilities.
+- TypeScript and frontend formatting passed; **10 browser tests passed in 24.5s** against actual `app.py:app` with VERCEL=1, no CDN/rewrite simulation.
+- Config/schema check passed with 14 unchanged-path cases; 12 native HTTP checks passed, including HTML and JS/CSS payload types, metrics, hidden data and 1 February delivery.
+- Local packaging estimate now includes 568,013 frontend bytes: 11,739,653 bytes total using the prior clean dependency measurement, well below the documented 500MB Python limit. Exact cloud adapter size remains unmeasured.
+- Read-only review found no Important/Critical issues. Docker files/requirements remain unchanged; no fresh container rebuild was performed.
+
+Public fix verification is pending the new build; it must pass both HTTP and browser checks after push. Historical reports below are retained for traceability and do not certify current frontend delivery.
+
 ## Requirements parser fix, 29 October 2026
 
 The user reported `PYTHON_REQUIREMENTS_PARSE_ERROR` at position 79 of root `requirements.txt`, the start of its `-r backend/requirements-serverless.txt` directive. The included manifest is tracked, exists and is not excluded by `.vercelignore` or the function's `excludeFiles`. Thus a missing/excluded checked-in file does not explain the supplied failure. This is an include-resolution/parser compatibility issue in the reported Vercel build; its internal parser has not been reproduced locally, and this does not establish that every Vercel runtime rejects all includes.

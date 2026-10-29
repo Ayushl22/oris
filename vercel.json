@@ -5,14 +5,8 @@
   "functions": {
     "app.py": {
       "maxDuration": 30,
-      "includeFiles": "data/snapshot.json.gz",
-      "excludeFiles": "{.venv/**,.git/**,.ruff_cache/**,**/__pycache__/**,**/.pytest_cache/**,**/node_modules/**,frontend/**,public/**,docs/**,scripts/**,backend/tests/**,backend/.test-tmp/**,**/*.tsbuildinfo,**/test-results/**,**/playwright-report/**}"
+      "includeFiles": "{data/snapshot.json.gz,frontend/dist/**}",
+      "excludeFiles": "{.venv/**,.git/**,.ruff_cache/**,**/__pycache__/**,**/.pytest_cache/**,**/node_modules/**,frontend/src/**,frontend/tests/**,public/**,docs/**,scripts/**,backend/tests/**,backend/.test-tmp/**,**/*.tsbuildinfo,**/test-results/**,**/playwright-report/**}"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/((?!api(?:/|$)|assets(?:/|$)|docs(?:/|$)|redoc(?:/|$)|openapi\\.json$)[^.]*)",
-      "destination": "/index.html"
-    }
-  ]
+  }
 }
